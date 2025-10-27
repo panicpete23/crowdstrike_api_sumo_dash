@@ -1,0 +1,36 @@
+Crowdstrike API Activity Sumologic Dashbaord
+
+
+CS User Agents
+_sourceCategory=*crowdstrike*
+| json field=event.Attributes "user_agent"
+| count by user_agent
+| sort by _count desc
+
+Successful API Paths
+_sourceCategory=*crowdstrike*
+| json field=_raw "event"
+| json field=event "Success", "Attributes"
+| json field=Attributes "request_path", "APIClientID", "user_ip"
+| where tostring(Success) = "true"
+| count by request_path, APIClientID, user_ip
+| sort by _count desc
+
+Unusual API Clients (only does client ID)
+_sourceCategory=*crowdstrike*
+| json field=event.Attributes "APIClientID"
+| count by APIClientID
+| sort by _count desc
+
+Top API IP's
+_sourceCategory=*crowdstrike*
+| json field=_raw "event"
+| json field=event "SourceIp"
+| count by SourceIp
+| sort by _count desc
+
+API Scope
+_sourceCategory=*crowdstrike*
+| json field=event.Attributes "scopes"
+| count by scopes
+| sort by _count desc
